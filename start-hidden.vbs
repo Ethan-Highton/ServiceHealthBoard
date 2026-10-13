@@ -1,4 +1,4 @@
-' Starts the Service Health Board with no console window. Used by the "ServiceHealthBoard" logon task.
-Set sh = CreateObject("WScript.Shell")
-sh.CurrentDirectory = CreateObject("Scripting.FileSystemObject").GetParentFolderName(WScript.ScriptFullName)
-sh.Run """C:\Program Files\nodejs\node.exe"" server.mjs", 0, False
+' Starts the Service Health Board supervisor with no console window. Used by the "ServiceHealthBoard" logon task.
+Set fso = CreateObject("Scripting.FileSystemObject")
+dir = fso.GetParentFolderName(WScript.ScriptFullName)
+CreateObject("WScript.Shell").Run "powershell.exe -NoProfile -ExecutionPolicy Bypass -File """ & dir & "\run-loop.ps1""", 0, False

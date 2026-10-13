@@ -59,7 +59,8 @@ None. The board keeps no data of its own, so there is nothing to back up beyond 
 
 ```
 server.mjs            HTTP server and API
-start-hidden.vbs      starts the server with no window (used by the login task)
+start-hidden.vbs      starts run-loop.ps1 with no window (used by the login task)
+run-loop.ps1          keeps the server running, restarting it if it exits
 config/services.json  host, port and the list of services
 lib/checks.mjs        health checks (one function per check type)
 lib/actions.mjs       restart actions (one function per restart type)
@@ -83,11 +84,11 @@ Plain Node (ES modules, no dependencies) on the server; plain HTML, CSS and Java
 
 ## Start at login
 
-A scheduled task named `ServiceHealthBoard` runs `start-hidden.vbs` (no window) when you log in, and retries every minute if the server can't start yet (for example Tailscale isn't connected). Check or control it with `Get-ScheduledTask ServiceHealthBoard`, `Start-ScheduledTask ServiceHealthBoard` and `Stop-ScheduledTask ServiceHealthBoard`. To recreate it:
+A scheduled task named `ServiceHealthBoard` runs `start-hidden.vbs` (no window) when you log in. That starts `run-loop.ps1`, which keeps the server running and starts it again 10 seconds after it exits (for example when Tailscale is not connected yet at login). The log is `%LOCALAPPDATA%service-health-boardoard.log`. Check or control the task with `Get-ScheduledTask ServiceHealthBoard`, `Start-ScheduledTask ServiceHealthBoard` and `Stop-ScheduledTask ServiceHealthBoard` (stopping the task does not stop a loop that is already running; end its `powershell` and `node` processes).
 
 ```
 $a = New-ScheduledTaskAction -Execute wscript.exe -Argument '"C:\Users\Desktop\Documents\ServiceHealthBoard\start-hidden.vbs"'
 $t = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
-$s = New-ScheduledTaskSettingsSet -RestartCount 99 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit ([TimeSpan]::Zero) -StartWhenAvailable
+$s = New-ScheduledTaskSettingsSet -ExecutionTimeLimit ([TimeSpan]::Zero) -StartWhenAvailable
 Register-ScheduledTask ServiceHealthBoard -Action $a -Trigger $t -Settings $s
 ```
