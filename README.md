@@ -59,6 +59,7 @@ None. The board keeps no data of its own, so there is nothing to back up beyond 
 
 ```
 server.mjs            HTTP server and API
+start-hidden.vbs      starts the server with no window (used by the login task)
 config/services.json  host, port and the list of services
 lib/checks.mjs        health checks (one function per check type)
 lib/actions.mjs       restart actions (one function per restart type)
@@ -79,3 +80,14 @@ tests/                node:test unit tests
 ## Stack
 
 Plain Node (ES modules, no dependencies) on the server; plain HTML, CSS and JavaScript on the page, styled to match the rest of the library (dark, Bahnschrift, amber accent).
+
+## Start at login
+
+A scheduled task named `ServiceHealthBoard` runs `start-hidden.vbs` (no window) when you log in, and retries every minute if the server can't start yet (for example Tailscale isn't connected). Check or control it with `Get-ScheduledTask ServiceHealthBoard`, `Start-ScheduledTask ServiceHealthBoard` and `Stop-ScheduledTask ServiceHealthBoard`. To recreate it:
+
+```
+$a = New-ScheduledTaskAction -Execute wscript.exe -Argument '"C:\Users\Desktop\Documents\ServiceHealthBoard\start-hidden.vbs"'
+$t = New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME
+$s = New-ScheduledTaskSettingsSet -RestartCount 99 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit ([TimeSpan]::Zero) -StartWhenAvailable
+Register-ScheduledTask ServiceHealthBoard -Action $a -Trigger $t -Settings $s
+```
