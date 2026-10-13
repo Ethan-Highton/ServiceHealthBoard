@@ -1,0 +1,14 @@
+/* Design tokens, shared with the rest of the library: a station departures board at night.
+   Same values as WebAppLib/assets/css/tokens.css and NicotineLog/css/tokens.css. */
+:root {
+  color-scheme: dark;
+  --ground: #0d0e0c; --raised: #151613; --sunk: #0a0b09; --active: #1d1e1a; --cell: #070806;
+  --rule: #2a2b26; --rule-strong: #3d3e37;
+  --ink: #f1eee4; --ink-2: #bdb9ab; --ink-3: #8c8a7e;
+  --amber: #ffb81c; --amber-ink: #1b1300; --amber-wash: rgba(255, 184, 28, .1);
+  --teal: #4fd0a5; --teal-wash: rgba(79, 208, 165, .1);
+  --alert: #ff6b5e; --alert-wash: rgba(255, 107, 94, .1);
+  --font: "Bahnschrift", "DIN Alternate", "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  --seam: linear-gradient(to bottom, transparent calc(50% - 1px), #000 calc(50% - 1px), #000 50%, rgba(255,255,255,.09) 50%, rgba(255,255,255,.09) calc(50% + 1px), transparent calc(50% + 1px));
+}

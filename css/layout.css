@@ -1,0 +1,26 @@
+/* top bar with split-flap clock */
+.topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+          height: 56px; padding: 0 16px; background: var(--ground); border-bottom: 1px solid var(--rule); }
+.brand { font-size: 1.0625rem; font-weight: 600; white-space: nowrap; }
+.clock { display: flex; align-items: center; gap: 3px; }
+.digit { display: grid; place-items: center; width: 22px; height: 32px; border: 1px solid var(--rule);
+         border-radius: 3px; background: var(--seam), var(--cell); font-size: 1.25rem; font-weight: 600; }
+.digit.flip { animation: flap 420ms var(--ease); }
+.digit.ampm { width: auto; padding: 0 7px; margin-left: 5px; font-size: .8125rem; letter-spacing: .06em; }
+.colon { color: var(--ink-3); font-weight: 600; }
+@keyframes flap { 0% { transform: perspective(260px) rotateX(-88deg); opacity: 0; } 45% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+
+main { padding: 24px 16px 64px; max-width: 760px; margin: 0 auto; animation: in .3s var(--ease); }
+@keyframes in { from { opacity: 0; transform: translateY(6px); } }
+h1 { font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem); line-height: 1.05; letter-spacing: -.01em; font-weight: 600; margin: 0 0 6px; text-wrap: balance; }
+.line { margin: 8px 0 0; font-size: 1.0625rem; line-height: 1.6; max-width: 56ch; color: var(--ink-2); text-wrap: pretty; }
+.line.bad { color: var(--alert); }
+.updated { margin: 20px 0 0; font-size: .8125rem; color: var(--ink-3); }
+
+@media (min-width: 880px) {
+  .topbar { height: 72px; padding: 0 40px; }
+  main { padding: 36px 40px 64px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  main, .digit.flip { animation: none; }
+}

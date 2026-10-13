@@ -1,0 +1,59 @@
+{
+  "host": "100.105.214.97",
+  "port": 8095,
+  "services": [
+    {
+      "id": "tailscale",
+      "name": "Tailscale",
+      "description": "The private network that lets your phone reach this PC. Restarting it drops this page for a moment.",
+      "check": {
+        "type": "windows-service",
+        "name": "Tailscale"
+      },
+      "restart": {
+        "type": "windows-service",
+        "name": "Tailscale",
+        "warning": "Restarting Tailscale cuts your phone's connection for a few seconds, including to this page."
+      }
+    },
+    {
+      "id": "remote-control",
+      "name": "Claude Remote Control",
+      "description": "Lets you drive Claude on this PC from your phone.",
+      "check": {
+        "type": "process",
+        "match": "remote-control"
+      },
+      "restart": {
+        "type": "task",
+        "task": "ClaudeRemoteControl",
+        "stopMatch": "remote-control",
+        "warning": "Any Claude session running through Remote Control will be disconnected."
+      }
+    },
+    {
+      "id": "ollama",
+      "name": "Local AI (Ollama)",
+      "description": "Runs the free local model (Qwen) used for delegated work.",
+      "check": {
+        "type": "http",
+        "url": "http://127.0.0.1:11434/api/tags",
+        "detail": "ollama-models"
+      },
+      "restart": {
+        "type": "process",
+        "stopNames": [
+          "ollama",
+          "ollama app"
+        ],
+        "start": {
+          "command": "%LOCALAPPDATA%\\Programs\\Ollama\\ollama.exe",
+          "args": [
+            "serve"
+          ]
+        },
+        "warning": "Anything using the local model right now will be interrupted."
+      }
+    }
+  ]
+}

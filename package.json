@@ -1,0 +1,12 @@
+{
+  "name": "service-health-board",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Phone page that shows whether the PC's key services are up, with a restart button for each.",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test"
+  },
+  "engines": { "node": ">=18" }
+}
